@@ -1,0 +1,176 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<mujoco model="b1_description">
+  <compiler angle="radian"/>
+  <asset>
+    <mesh name="trunkb" content_type="model/stl" file="/home/myc/isaacgym/legged_gym/resources/robots/b1/urdf/../meshes/trunkb.stl"/>
+    <mesh name="hipb" content_type="model/stl" file="/home/myc/isaacgym/legged_gym/resources/robots/b1/urdf/../meshes/hipb.stl"/>
+    <mesh name="thigh_mirrorb" content_type="model/stl" file="/home/myc/isaacgym/legged_gym/resources/robots/b1/urdf/../meshes/thigh_mirrorb.stl"/>
+    <mesh name="calfb" content_type="model/stl" file="/home/myc/isaacgym/legged_gym/resources/robots/b1/urdf/../meshes/calfb.stl"/>
+    <mesh name="thighb" content_type="model/stl" file="/home/myc/isaacgym/legged_gym/resources/robots/b1/urdf/../meshes/thighb.stl"/>
+  </asset>
+  <worldbody>
+    <body name="base">
+      <body name="trunk">
+        <inertial pos="0.008987 0.002243 0.003013" quat="0.00241752 0.690498 0.00395451 0.723319" mass="29.45" diaginertia="0.785078 0.756329 0.181841"/>
+        <geom type="mesh" rgba="1 0.423529 0.0392157 1" mesh="trunkb"/>
+        <body name="imu_link">
+          <inertial pos="0 0 0" quat="0.707107 0.707107 0 0" mass="0.001" diaginertia="0.0001 0.0001 1e-06"/>
+          <geom size="0.0005 0.0005 0.0005" type="box" rgba="0.8 0 0 1"/>
+        </body>
+        <body name="left_side_camera_link" pos="-0.1086 0.1371 -0.03077" quat="0.986286 -0.165047 0 0">
+          <inertial pos="0 0 0" mass="0.001" diaginertia="0.0001 0.0001 0.0001"/>
+        </body>
+        <body name="right_side_camera_link" pos="-0.1019 -0.1371 -0.03077" quat="0.986286 0.165047 0 0">
+          <inertial pos="0 0 0" mass="0.001" diaginertia="0.0001 0.0001 0.0001"/>
+        </body>
+        <body name="head_camera_1_link" pos="0.48883 0 0.0255">
+          <inertial pos="0 0 0" mass="0.001" diaginertia="0.0001 0.0001 0.0001"/>
+        </body>
+        <body name="head_camera_2_link" pos="0.4543 0 -0.081">
+          <inertial pos="0 0 0" mass="0.001" diaginertia="0.0001 0.0001 0.0001"/>
+        </body>
+        <body name="tail_camera_link" pos="-0.459 0 -0.081">
+          <inertial pos="0 0 0" mass="0.001" diaginertia="0.0001 0.0001 0.0001"/>
+        </body>
+        <body name="FR_hip" pos="0.3455 -0.072 0">
+          <inertial pos="-0.020298 -0.009758 0.000109" quat="0.515712 0.514255 0.484236 0.48487" mass="2.15" diaginertia="0.00879282 0.00606036 0.00404851"/>
+          <joint name="FR_hip_joint" pos="0 0 0" axis="1 0 0" range="-0.75 0.75" actuatorfrcrange="-91.0035 91.0035"/>
+          <geom quat="0 1 0 0" type="mesh" rgba="1 0.423529 0.0392157 1" mesh="hipb"/>
+          <body name="FR_thigh" pos="0 -0.12675 0">
+            <inertial pos="-0.000235 0.028704 -0.054169" quat="0.740242 -0.0365363 0.0756343 0.667073" mass="4.3" diaginertia="0.0469979 0.0445835 0.00759726"/>
+            <joint name="FR_thigh_joint" pos="0 0 0" axis="0 1 0" range="-1 3.5" actuatorfrcrange="-93.33 93.33"/>
+            <geom type="mesh" rgba="1 0.423529 0.0392157 1" mesh="thigh_mirrorb"/>
+            <body name="FR_calf" pos="0 0 -0.35">
+              <inertial pos="0.005237 0 -0.202805" quat="0.707228 -0.00602575 -0.00605025 0.706934" mass="1.05" diaginertia="0.0151595 0.0150153 0.000371478"/>
+              <joint name="FR_calf_joint" pos="0 0 0" axis="0 1 0" range="-2.6 -0.6" actuatorfrcrange="-140 140"/>
+              <geom type="mesh" rgba="1 0.423529 0.0392157 1" mesh="calfb"/>
+              <body name="FR_foot" pos="0 0 -0.35">
+                <inertial pos="0 0 0" mass="0.05" diaginertia="3.2e-05 3.2e-05 3.2e-05"/>
+                <geom size="0.04" rgba="0 0.8 0 1"/>
+              </body>
+            </body>
+            <body name="FR_calf_rotor" pos="0 0.0519 0">
+              <inertial pos="0 0 0" quat="0.707107 0 0 0.707107" mass="0.266" diaginertia="0.00091885 0.000485657 0.000485657"/>
+              <geom size="0.05 0.01" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0 0.8 0 1"/>
+            </body>
+          </body>
+          <body name="FR_thigh_rotor" pos="0 -0.00935 0">
+            <inertial pos="0 0 0" quat="0.707107 0 0 0.707107" mass="0.266" diaginertia="0.00091885 0.000485657 0.000485657"/>
+            <geom size="0.05 0.01" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0 0.8 0 1"/>
+          </body>
+        </body>
+        <body name="FR_hip_rotor" pos="0.1955 -0.072 0">
+          <inertial pos="0 0 0" mass="0.199" diaginertia="0.00039249 0.000219397 0.000219397"/>
+          <geom size="0.05 0.01" quat="0.707107 0 0.707107 0" type="cylinder" rgba="0 0.8 0 1"/>
+        </body>
+        <body name="FL_hip" pos="0.3455 0.072 0">
+          <inertial pos="-0.020298 0.009758 0.000109" quat="0.48487 0.484236 0.514255 0.515712" mass="2.15" diaginertia="0.00879282 0.00606036 0.00404851"/>
+          <joint name="FL_hip_joint" pos="0 0 0" axis="1 0 0" range="-0.75 0.75" actuatorfrcrange="-91.0035 91.0035"/>
+          <geom type="mesh" rgba="1 0.423529 0.0392157 1" mesh="hipb"/>
+          <body name="FL_thigh" pos="0 0.12675 0">
+            <inertial pos="-0.000235 -0.028704 -0.054169" quat="0.667073 0.0756343 -0.0365363 0.740242" mass="4.3" diaginertia="0.0469979 0.0445835 0.00759726"/>
+            <joint name="FL_thigh_joint" pos="0 0 0" axis="0 1 0" range="-1 3.5" actuatorfrcrange="-93.33 93.33"/>
+            <geom type="mesh" rgba="1 0.423529 0.0392157 1" mesh="thighb"/>
+            <body name="FL_calf" pos="0 0 -0.35">
+              <inertial pos="0.005237 0 -0.202805" quat="0.707228 -0.00602575 -0.00605025 0.706934" mass="1.05" diaginertia="0.0151595 0.0150153 0.000371478"/>
+              <joint name="FL_calf_joint" pos="0 0 0" axis="0 1 0" range="-2.6 -0.6" actuatorfrcrange="-140 140"/>
+              <geom type="mesh" rgba="1 0.423529 0.0392157 1" mesh="calfb"/>
+              <body name="FL_foot" pos="0 0 -0.35">
+                <inertial pos="0 0 0" mass="0.05" diaginertia="3.2e-05 3.2e-05 3.2e-05"/>
+                <geom size="0.04" rgba="0 0.8 0 1"/>
+              </body>
+            </body>
+            <body name="FL_calf_rotor" pos="0 -0.0519 0">
+              <inertial pos="0 0 0" quat="0.707107 0 0 0.707107" mass="0.266" diaginertia="0.00091885 0.000485657 0.000485657"/>
+              <geom size="0.05 0.01" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0 0.8 0 1"/>
+            </body>
+          </body>
+          <body name="FL_thigh_rotor" pos="0 0.00935 0">
+            <inertial pos="0 0 0" quat="0.707107 0 0 0.707107" mass="0.266" diaginertia="0.00091885 0.000485657 0.000485657"/>
+            <geom size="0.05 0.01" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0 0.8 0 1"/>
+          </body>
+        </body>
+        <body name="FL_hip_rotor" pos="0.1955 0.072 0">
+          <inertial pos="0 0 0" mass="0.199" diaginertia="0.00039249 0.000219397 0.000219397"/>
+          <geom size="0.05 0.01" quat="0.707107 0 0.707107 0" type="cylinder" rgba="0 0.8 0 1"/>
+        </body>
+        <body name="RR_hip" pos="-0.3455 -0.072 0">
+          <inertial pos="0.020298 -0.009758 0.000109" quat="0.484236 0.48487 0.515712 0.514255" mass="2.15" diaginertia="0.00879282 0.00606036 0.00404851"/>
+          <joint name="RR_hip_joint" pos="0 0 0" axis="1 0 0" range="-0.75 0.75" actuatorfrcrange="-91.0035 91.0035"/>
+          <geom quat="0 0 0 -1" type="mesh" rgba="1 0.423529 0.0392157 1" mesh="hipb"/>
+          <body name="RR_thigh" pos="0 -0.12675 0">
+            <inertial pos="-0.000235 0.028704 -0.054169" quat="0.740242 -0.0365363 0.0756343 0.667073" mass="4.3" diaginertia="0.0469979 0.0445835 0.00759726"/>
+            <joint name="RR_thigh_joint" pos="0 0 0" axis="0 1 0" range="-1 3.5" actuatorfrcrange="-93.33 93.33"/>
+            <geom type="mesh" rgba="1 0.423529 0.0392157 1" mesh="thigh_mirrorb"/>
+            <body name="RR_calf" pos="0 0 -0.35">
+              <inertial pos="0.005237 0 -0.202805" quat="0.707228 -0.00602575 -0.00605025 0.706934" mass="1.05" diaginertia="0.0151595 0.0150153 0.000371478"/>
+              <joint name="RR_calf_joint" pos="0 0 0" axis="0 1 0" range="-2.6 -0.6" actuatorfrcrange="-140 140"/>
+              <geom type="mesh" rgba="1 0.423529 0.0392157 1" mesh="calfb"/>
+              <body name="RR_foot" pos="0 0 -0.35">
+                <inertial pos="0 0 0" mass="0.05" diaginertia="3.2e-05 3.2e-05 3.2e-05"/>
+                <geom size="0.04" rgba="0 0.8 0 1"/>
+              </body>
+            </body>
+            <body name="RR_calf_rotor" pos="0 0.0519 0">
+              <inertial pos="0 0 0" quat="0.707107 0 0 0.707107" mass="0.266" diaginertia="0.00091885 0.000485657 0.000485657"/>
+              <geom size="0.05 0.01" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0 0.8 0 1"/>
+            </body>
+          </body>
+          <body name="RR_thigh_rotor" pos="0 -0.00935 0">
+            <inertial pos="0 0 0" quat="0.707107 0 0 0.707107" mass="0.266" diaginertia="0.00091885 0.000485657 0.000485657"/>
+            <geom size="0.05 0.01" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0 0.8 0 1"/>
+          </body>
+        </body>
+        <body name="RR_hip_rotor" pos="-0.1955 -0.072 0">
+          <inertial pos="0 0 0" mass="0.199" diaginertia="0.00039249 0.000219397 0.000219397"/>
+          <geom size="0.05 0.01" quat="0.707107 0 0.707107 0" type="cylinder" rgba="0 0.8 0 1"/>
+        </body>
+        <body name="RL_hip" pos="-0.3455 0.072 0">
+          <inertial pos="0.020298 0.009758 0.000109" quat="0.514255 0.515712 0.48487 0.484236" mass="2.15" diaginertia="0.00879282 0.00606036 0.00404851"/>
+          <joint name="RL_hip_joint" pos="0 0 0" axis="1 0 0" range="-0.75 0.75" actuatorfrcrange="-91.0035 91.0035"/>
+          <geom quat="0 0 1 0" type="mesh" rgba="1 0.423529 0.0392157 1" mesh="hipb"/>
+          <body name="RL_thigh" pos="0 0.12675 0">
+            <inertial pos="-0.000235 -0.028704 -0.054169" quat="0.667073 0.0756343 -0.0365363 0.740242" mass="4.3" diaginertia="0.0469979 0.0445835 0.00759726"/>
+            <joint name="RL_thigh_joint" pos="0 0 0" axis="0 1 0" range="-1 3.5" actuatorfrcrange="-93.33 93.33"/>
+            <geom type="mesh" rgba="1 0.423529 0.0392157 1" mesh="thighb"/>
+            <body name="RL_calf" pos="0 0 -0.35">
+              <inertial pos="0.005237 0 -0.202805" quat="0.707228 -0.00602575 -0.00605025 0.706934" mass="1.05" diaginertia="0.0151595 0.0150153 0.000371478"/>
+              <joint name="RL_calf_joint" pos="0 0 0" axis="0 1 0" range="-2.6 -0.6" actuatorfrcrange="-140 140"/>
+              <geom type="mesh" rgba="1 0.423529 0.0392157 1" mesh="calfb"/>
+              <body name="RL_foot" pos="0 0 -0.35">
+                <inertial pos="0 0 0" mass="0.05" diaginertia="3.2e-05 3.2e-05 3.2e-05"/>
+                <geom size="0.04" rgba="0 0.8 0 1"/>
+              </body>
+            </body>
+            <body name="RL_calf_rotor" pos="0 -0.0519 0">
+              <inertial pos="0 0 0" quat="0.707107 0 0 0.707107" mass="0.266" diaginertia="0.00091885 0.000485657 0.000485657"/>
+              <geom size="0.05 0.01" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0 0.8 0 1"/>
+            </body>
+          </body>
+          <body name="RL_thigh_rotor" pos="0 0.00935 0">
+            <inertial pos="0 0 0" quat="0.707107 0 0 0.707107" mass="0.266" diaginertia="0.00091885 0.000485657 0.000485657"/>
+            <geom size="0.05 0.01" quat="0.707107 0.707107 0 0" type="cylinder" rgba="0 0.8 0 1"/>
+          </body>
+        </body>
+        <body name="RL_hip_rotor" pos="-0.1955 0.072 0">
+          <inertial pos="0 0 0" mass="0.199" diaginertia="0.00039249 0.000219397 0.000219397"/>
+          <geom size="0.05 0.01" quat="0.707107 0 0.707107 0" type="cylinder" rgba="0 0.8 0 1"/>
+        </body>
+      </body>
+    </body>
+  </worldbody>
+  <actuator>
+  <position joint="FR_hip_joint" kp="200"/>
+  <position joint="FR_thigh_joint" kp="200"/>
+  <position joint="FR_calf_joint" kp="200"/>
+  <position joint="FL_hip_joint" kp="200"/>
+  <position joint="FL_thigh_joint" kp="200"/>
+  <position joint="FL_calf_joint" kp="200"/>
+  <position joint="RR_hip_joint" kp="200"/>
+  <position joint="RR_thigh_joint" kp="200"/>
+  <position joint="RR_calf_joint" kp="200"/>
+  <position joint="RL_hip_joint" kp="200"/>
+  <position joint="RL_thigh_joint" kp="200"/>
+  <position joint="RL_calf_joint" kp="200"/>
+</actuator>
+</mujoco>
