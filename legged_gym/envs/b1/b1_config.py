@@ -32,7 +32,7 @@ from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobot
 
 class B1RoughCfg( LeggedRobotCfg ):
     class init_state( LeggedRobotCfg.init_state ):
-        pos = [0.0, 0.0, 0.42] # x,y,z [m]
+        pos = [0.0, 0.0, 0.65] # x,y,z [m]
         default_joint_angles = { # = target angles [rad] when action = 0.0
             'FL_hip_joint': 0.1,   # [rad]
             'RL_hip_joint': 0.1,   # [rad]
@@ -49,11 +49,11 @@ class B1RoughCfg( LeggedRobotCfg ):
             'FR_calf_joint': -1.5,  # [rad]
             'RR_calf_joint': -1.5,    # [rad]
         }
+
     class noise( LeggedRobotCfg.noise ):
         class noise_scales( LeggedRobotCfg.noise.noise_scales ):
             target_dist_noise_scale = 0.1
     class env(LeggedRobotCfg.env):
-        #num_envs = 100  # 批量仿真环境数
         num_actions = 12  # B1为12自由度
         #num_observations = 237
         episode_length_s = 25  # 每个episode持续25秒
@@ -83,7 +83,7 @@ class B1RoughCfg( LeggedRobotCfg ):
             torques = -0.0002
             dof_pos_limits = -10.0
             arrive_target_point = 0
-            total_distance = 1.0
+            total_distance = 0.0
 class B1RoughCfgPPO( LeggedRobotCfgPPO ):
     class algorithm( LeggedRobotCfgPPO.algorithm ):
         entropy_coef = 0.01

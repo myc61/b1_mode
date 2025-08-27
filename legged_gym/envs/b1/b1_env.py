@@ -15,15 +15,15 @@ class B1Robot(LeggedRobot):
     def __init__(self, cfg: LeggedRobotCfg, sim_params, physics_engine, sim_device, headless):
         # 1. 调用父类构造函数，初始化基础仿真环境
         super().__init__(cfg, sim_params, physics_engine, sim_device, headless)
-        self.initial_base_pos = torch.zeros(self.num_envs, 3, device=self.device)  # 初始位置
-        self.prev_base_pos = torch.zeros(self.num_envs, 3, device=self.device)    # 上一步位置
-        self.total_distance = torch.zeros(self.num_envs, device=self.device)      # 累计移动距离
-        # 2. B1特有初始化：目标点配置（从配置文件读取，默认x=5m、y=0m、z=0m）
-        self.target_pos = torch.tensor(
-            cfg.env.target_pos,
-            device=self.device,
-            dtype=torch.float32
-        )
+        # self.initial_base_pos = torch.zeros(self.num_envs, 3, device=self.device)  # 初始位置
+        # self.prev_base_pos = torch.zeros(self.num_envs, 3, device=self.device)    # 上一步位置
+        # self.total_distance = torch.zeros(self.num_envs, device=self.device)      # 累计移动距离
+        # # 2. B1特有初始化：目标点配置（从配置文件读取，默认x=5m、y=0m、z=0m）
+        # self.target_pos = torch.tensor(
+        #     cfg.env.target_pos,
+        #     device=self.device,
+        #     dtype=torch.float32
+        # )
         
         # 3. B1关节映射验证（确保与URDF关节名匹配，12自由度：4条腿×3关节/腿）
         self._verify_b1_joints()
@@ -34,7 +34,8 @@ class B1Robot(LeggedRobot):
         print("elf.num_dof:",self.num_dof)
         if self.num_dof != expected_joint_count:
             raise ValueError(f"B1机器人需12个自由度，当前加载{self.num_dof}个关节，请检查URDF文件！")
-        
+        print("关节顺序:", self.dof_names)
+        print("default_dof_pos:", self.default_dof_pos)
         # 验证关键关节名（匹配宇树B1 URDF关节命名规范）
         required_joint_keywords = ["hip", "thigh", "calf"]
         for joint_name in self.dof_names:
@@ -148,13 +149,13 @@ class B1Robot(LeggedRobot):
         # 1. 调用父类方法，检查基础终止条件（跌倒、超时等）
         super().check_termination()
         
-        # 2. 新增：到达目标点终止（距离<0.2m时，终止当前episode）
-        current_base_xy = self.root_states[:, :2]
-        target_xy = self.target_pos[:2].unsqueeze(0).repeat(current_base_xy.shape[0], 1)
-        dist_to_target = torch.norm(current_base_xy - target_xy, dim=1)
+        # # 2. 新增：到达目标点终止（距离<0.2m时，终止当前episode）
+        # current_base_xy = self.root_states[:, :2]
+        # target_xy = self.target_pos[:2].unsqueeze(0).repeat(current_base_xy.shape[0], 1)
+        # dist_to_target = torch.norm(current_base_xy - target_xy, dim=1)
         
-        # 将「到达目标」加入终止缓冲区（True表示需要重置环境）
-        self.reset_buf |= (dist_to_target < 0.2)
+        # # 将「到达目标」加入终止缓冲区（True表示需要重置环境）
+        # self.reset_buf |= (dist_to_target < 0.2)
 
     def _compute_torques(self, actions):
         """适配B1关节特性的扭矩计算：继承PD位置控制，确保关节力符合B1硬件限制"""
@@ -185,7 +186,8 @@ class B1Robot(LeggedRobot):
         """重置环境时，初始化位置和累计距离"""
         obs, privileged_obs = super().reset()
         # 记录初始位置和上一步位置
-        self.initial_base_pos = self.root_states[:, :3].clone()  # 保存初始x/y/z坐标
-        self.prev_base_pos = self.root_states[:, :3].clone()      # 上一步位置初始化为初始位置
-        self.total_distance.zero_()  # 重置累计距离
+        # self.initial_base_pos = self.root_states[:, :3].clone()  # 保存初始x/y/z坐标
+        # self.prev_base_pos = self.root_states[:, :3].clone()      # 上一步位置初始化为初始位置
+        # self.total_distance.zero_()  # 重置累计距离
+        print("初始关节角度:", self.dof_pos[0].cpu().numpy())  # 打印第一个环境的关节角度
         return obs, privileged_obs
