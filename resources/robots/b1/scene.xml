@@ -1,6 +1,6 @@
 <mujoco model="b1_scene">
     <!-- 机器人模型 -->
-    <include file="b1.xml"/>
+    <include file="urdf/b1.xml"/>
 
     <!-- 场景地面与光源 -->
     <compiler angle="degree" coordinate="local"/>

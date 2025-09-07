@@ -32,24 +32,22 @@ from legged_gym.envs.base.legged_robot_config import LeggedRobotCfg, LeggedRobot
 
 class B1RoughCfg( LeggedRobotCfg ):
     class init_state( LeggedRobotCfg.init_state ):
-        pos = [0.0, 0.0, 0.65] # x,y,z [m]
+        pos = [0.0, 0.0, 0.68] # x,y,z [m]
         default_joint_angles = { # = target angles [rad] when action = 0.0
-            'FL_hip_joint': 0.1,   # [rad]
-            'RL_hip_joint': 0.1,   # [rad]
-            'FR_hip_joint': -0.1 ,  # [rad]
-            'RR_hip_joint': -0.1,   # [rad]
+            'FL_hip_joint': 0.1,
+            'FR_hip_joint': -0.1,
+            'RL_hip_joint': 0.1,
+            'RR_hip_joint': -0.1,
+            'FL_thigh_joint': 0.6,  # [rad]
+            'RL_thigh_joint': 1.0,  # [rad]
+            'FR_thigh_joint': 0.6,  # [rad]
+            'RR_thigh_joint': 1.0,  # [rad]
 
-            'FL_thigh_joint': 0.8,     # [rad]
-            'RL_thigh_joint': 1.,   # [rad]
-            'FR_thigh_joint': 0.8,     # [rad]
-            'RR_thigh_joint': 1.,   # [rad]
-
-            'FL_calf_joint': -1.5,   # [rad]
-            'RL_calf_joint': -1.5,    # [rad]
-            'FR_calf_joint': -1.5,  # [rad]
-            'RR_calf_joint': -1.5,    # [rad]
+            'FL_calf_joint': -1.3,  # [rad]
+            'RL_calf_joint': -1.3,  # [rad]
+            'FR_calf_joint': -1.3,  # [rad]
+            'RR_calf_joint': -1.3  # [rad]
         }
-
     class noise( LeggedRobotCfg.noise ):
         class noise_scales( LeggedRobotCfg.noise.noise_scales ):
             target_dist_noise_scale = 0.1
@@ -74,16 +72,26 @@ class B1RoughCfg( LeggedRobotCfg ):
         foot_name = "foot"
         penalize_contacts_on = ["thigh", "calf"]
         terminate_after_contacts_on = ["base"]
+        flip_visual_attachments = False
         self_collisions = 1 # 1 to disable, 0 to enable...bitwise filter
-  
-    class rewards( LeggedRobotCfg.rewards ):
+    class normalization(LeggedRobotCfg.normalization):
+        clip_observations = 100.
+        clip_actions = 100.
+    class rewards(LeggedRobotCfg.rewards):
         soft_dof_pos_limit = 0.9
-        base_height_target = 0.25
-        class scales( LeggedRobotCfg.rewards.scales ):
-            torques = -0.0002
-            dof_pos_limits = -10.0
-            arrive_target_point = 0
-            total_distance = 0.0
+        base_height_target = 0.65
+        class scales(LeggedRobotCfg.rewards.scales):
+            tracking_lin_vel = 3.0         # 线速度跟踪奖励，鼓励按目标速度运动
+            tracking_ang_vel = 3.0         # 角速度跟踪奖励，鼓励按目标角速度运动
+            feet_air_time = 2.0            # 抬腿奖励，鼓励步态
+            torques = -0.0002              # 扭矩惩罚，防止动作过大
+            dof_pos_limits = -10.0         # 关节超限惩罚
+            collision = -2.0               # 碰撞惩罚，防止摔倒
+            action_rate = -0.01            # 动作变化惩罚，鼓励平滑
+            lin_vel_z = -2.0               # z轴速度惩罚，防止跳跃
+            ang_vel_xy = -0.05             # xy轴角速度惩罚，防止剧烈旋转
+            orientation = -5.
+            base_height = -30.
 class B1RoughCfgPPO( LeggedRobotCfgPPO ):
     class algorithm( LeggedRobotCfgPPO.algorithm ):
         entropy_coef = 0.01

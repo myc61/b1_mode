@@ -1,3 +1,4 @@
+#将leggedgym训练网络修改
 import numpy as np
 if not hasattr(np, "float"):
     np.float = float
@@ -10,7 +11,7 @@ from isaacgym import gymapi, gymtorch
 import torch
 from torch import nn
 
-checkpoint_path = "logs/rough_b1/Aug18_18-46-15_/model_100.pt"
+checkpoint_path = "logs/rough_b1/Sep03_13-25-42_/model_1500.pt"
 torchscript_path = "deploy/train_mode/policy_torchscript.pt"
 # ===============================
 # 1. 读取 config
