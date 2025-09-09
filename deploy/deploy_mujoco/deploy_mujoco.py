@@ -45,6 +45,7 @@ if __name__ == "__main__":
         simulation_dt = config["simulation_dt"]
         control_decimation = config["control_decimation"]
 
+
         kps = np.array(config["kps"], dtype=np.float32)
         kds = np.array(config["kds"], dtype=np.float32)
 
@@ -77,7 +78,7 @@ if __name__ == "__main__":
     m = mujoco.MjModel.from_xml_path(xml_path)
     d = mujoco.MjData(m)
     m.opt.timestep = simulation_dt
-
+    print("Actuator force range:", m.actuator_ctrlrange)
     # load policy
     policy = torch.jit.load(policy_path)
     with mujoco.viewer.launch_passive(m, d) as viewer:
@@ -88,18 +89,27 @@ if __name__ == "__main__":
             joint_end = joint_start + len(target_dof_pos)
             joint_vel_start = 6
             joint_vel_end = joint_vel_start + len(target_dof_pos)
-            tau = pd_control(
-                target_dof_pos,
-                d.qpos[joint_start:joint_end],
-                kps,
-                np.zeros_like(kds),
-                d.qvel[joint_vel_start:joint_vel_end],
-                kds
-            )
-            d.ctrl[:] = tau
-            mujoco.mj_step(m, d)
+            # tau = pd_control(
+            #     target_dof_pos,
+            #     d.qpos[joint_start:joint_end],
+            #     kps,
+            #     np.zeros_like(kds),
+            #     d.qvel[joint_vel_start:joint_vel_end],
+            #     kds
+            # )
+            # d.ctrl[:] = tau
 
+            fixed_torque = np.array([1000.0] * len(d.ctrl), dtype=np.float32)  # 为每个关节设置固定力矩
+            d.ctrl[:] = fixed_torque
+            # print("Applied fixed torques:", fixed_torque)
+            # print("Applied torques:", tau)
+            # print("Actual torques:", d.actuator_force)
+            #print("Target positions:", target_dof_pos)
+            mujoco.mj_step(m, d)
+            #print("Current joint positions (qpos):", d.qpos[joint_start:joint_end])
             counter += 1
+            # print("Current joint positions (qpos):", d.qpos[joint_start:joint_end])
+            # print("Current joint velocities (qvel):", d.qvel[joint_vel_start:joint_vel_end])
             if counter % control_decimation == 0:
                 # Apply control signal here.
 
@@ -129,13 +139,13 @@ if __name__ == "__main__":
                 obs[12 + num_actions : 12 + 2 * num_actions] = dqj
                 obs[12 + 2 * num_actions : 12 + 3 * num_actions] = action  # 上一步裁剪后的action
                 obs[12 + 3 * num_actions : 12 + 3 * num_actions  + num_height] = heights
-                print("lin_vel:", lin_vel)
-                print("omega:", omega)
-                print("gravity_orientation:", gravity_orientation)
-                print("cmd * cmd_scale:", cmd * cmd_scale)
-                print("qj (scaled):", qj)
-                print("dqj (scaled):", dqj)
-                print("action (previous step):", action)
+                # print("lin_vel:", lin_vel)
+                # print("omega:", omega)
+                # print("gravity_orientation:", gravity_orientation)
+                # print("cmd * cmd_scale:", cmd * cmd_scale)
+                # print("qj (scaled):", qj)
+                # print("dqj (scaled):", dqj)
+                # print("action (previous step):", action)
                 """ 
                 def compute_observations(self):
                     self.obs_buf = torch.cat((  self.base_lin_vel * self.obs_scales.lin_vel,
@@ -170,14 +180,17 @@ if __name__ == "__main__":
                     obs += (2 * np.random.rand(*obs.shape) - 1) * noise_scale_vec
 
                 obs = np.clip(obs, -clip_observations, clip_observations)
+                #print("obs:", obs)
                 obs_tensor = torch.from_numpy(obs).unsqueeze(0)
-
+                #print("obs_tensor:", obs_tensor)
                 action = policy(obs_tensor).detach().numpy().squeeze()
 
                 action = np.clip(action, -clip_actions, clip_actions)
 
-                #print("policy action:", action) 
+                #print("policy action:", action)
+                #print("default_angles:", default_angles) 
                 target_dof_pos = action * action_scale + default_angles  # 策略输出的是增量 并放缩+初始角度
+                #print("target_dof_pos:", target_dof_pos)
             viewer.sync()
 
             time_until_next_step = m.opt.timestep - (time.time() - step_start)

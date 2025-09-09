@@ -1,6 +1,9 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <mujoco model="b1_description">
   <compiler angle="radian"/>
+  <default>
+    <joint damping="0.001" armature="0.01" frictionloss="0.1"/> <!-- 添加默认阻尼和摩擦 -->
+  </default>
   <asset>
     <mesh name="trunk_mesh" file="../meshes/trunk.stl"/>
     <mesh name="hip_mesh" file="../meshes/hip.stl"/>
@@ -148,17 +151,17 @@
     </body>
   </worldbody>
   <actuator>
-    <motor name="RL_hip_motor" joint="RL_hip_joint" ctrlrange="-2 2" gear="100"/>
-    <motor name="RL_thigh_motor" joint="RL_thigh_joint" ctrlrange="-2 2" gear="40"/>
-    <motor name="RL_calf_motor" joint="RL_calf_joint" ctrlrange="-2 2" gear="40"/>
-    <motor name="FR_hip_motor" joint="FR_hip_joint" ctrlrange="-2 2" gear="100"/>
-    <motor name="FR_thigh_motor" joint="FR_thigh_joint" ctrlrange="-2 2" gear="40"/>
-    <motor name="FR_calf_motor" joint="FR_calf_joint" ctrlrange="-2 2" gear="40"/>
-    <motor name="FL_hip_motor" joint="FL_hip_joint" ctrlrange="-2 2" gear="100"/>
-    <motor name="FL_thigh_motor" joint="FL_thigh_joint" ctrlrange="-2 2" gear="40"/>
-    <motor name="FL_calf_motor" joint="FL_calf_joint" ctrlrange="-2 2" gear="40"/>
-    <motor name="RR_hip_motor" joint="RR_hip_joint" ctrlrange="-2 2" gear="100"/>
-    <motor name="RR_thigh_motor" joint="RR_thigh_joint" ctrlrange="-2 2" gear="40"/>
-    <motor name="RR_calf_motor" joint="RR_calf_joint" ctrlrange="-2 2" gear="40"/>
+    <motor name="FR_hip_motor" joint="FR_hip_joint" ctrlrange="-150 150" gear="100"/>
+    <motor name="FR_thigh_motor" joint="FR_thigh_joint" ctrlrange="-100 100" gear="40"/>
+    <motor name="FR_calf_motor" joint="FR_calf_joint" ctrlrange="-100 100" gear="40"/>
+    <motor name="FL_hip_motor" joint="FL_hip_joint" ctrlrange="-100 100" gear="100"/>
+    <motor name="FL_thigh_motor" joint="FL_thigh_joint" ctrlrange="-100 100" gear="40"/>
+    <motor name="FL_calf_motor" joint="FL_calf_joint" ctrlrange="-100 100" gear="40"/>
+    <motor name="RR_hip_motor" joint="RR_hip_joint" ctrlrange="-100 100" gear="100"/>
+    <motor name="RR_thigh_motor" joint="RR_thigh_joint" ctrlrange="-100 100" gear="40"/>
+    <motor name="RR_calf_motor" joint="RR_calf_joint" ctrlrange="-100 100" gear="40"/>
+    <motor name="RL_hip_motor" joint="RL_hip_joint" ctrlrange="-1000 1000" gear="100"/>
+    <motor name="RL_thigh_motor" joint="RL_thigh_joint" ctrlrange="-1000 1000" gear="40"/>
+    <motor name="RL_calf_motor" joint="RL_calf_joint" ctrlrange="-1000 1000" gear="40"/>
   </actuator>
 </mujoco>
