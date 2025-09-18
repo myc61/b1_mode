@@ -76,6 +76,12 @@ def play(args):
 
     for i in range(10*int(env.max_episode_length)):
         actions = policy(obs.detach())
+        if i < 5:
+            print(f"Step {i} obs shape:", obs[robot_index].shape)
+            obs_np = obs[robot_index].cpu().numpy() if hasattr(obs[robot_index], 'cpu') else obs[robot_index]
+            print(f"Step {i} obs: {', '.join([str(x) for x in obs_np])}")        
+            for idx, name in enumerate(env.dof_names):
+               print(f"Step {i} | action[{idx}] ({name}): {actions[robot_index, idx].item()}")
         obs, _, rews, dones, infos = env.step(actions.detach())
         if RECORD_FRAMES:
             if i % 2:

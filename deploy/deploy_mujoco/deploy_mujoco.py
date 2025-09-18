@@ -83,6 +83,7 @@ if __name__ == "__main__":
     d.qpos[joint_start:joint_end] = default_angles
     mujoco.mj_forward(m, d)
     policy = torch.jit.load(policy_path)
+
     with mujoco.viewer.launch_passive(m, d) as viewer:
         start = time.time()
         while viewer.is_running() and time.time() - start < simulation_duration:
@@ -91,6 +92,8 @@ if __name__ == "__main__":
             joint_end = joint_start + len(target_dof_pos)
             joint_vel_start = 6
             joint_vel_end = joint_vel_start + len(target_dof_pos)
+            print("当前关节位置 qpos:", d.qpos[joint_start:joint_end])
+            print("关节目标位置 target_dof_pos:", target_dof_pos)
             tau = pd_control(
                 target_dof_pos,
                 d.qpos[joint_start:joint_end],
@@ -99,12 +102,18 @@ if __name__ == "__main__":
                 d.qvel[joint_vel_start:joint_vel_end],
                 kds
             )
-            print("d.qpos:", d.qpos[joint_start:joint_end])
-            print("target_dof_pos:", target_dof_pos)
-            print("d.qvel:", d.qvel[joint_vel_start:joint_vel_end])
             d.ctrl[:] = tau
-            print("tau:", tau)
+            #print("命令力矩 ctrl:", d.ctrl)
             mujoco.mj_step(m, d)
+            #print("实际执行力矩 actuator_force:", d.actuator_force)
+            # for i in range(m.nu):
+            #     # actuator_trnid[i, 0] 是 actuator 对应的 joint id
+            #     joint_id = m.actuator_trnid[i, 0]
+            #     joint_name = m.joint(joint_id).name
+            #     print(f"关节 {joint_name}: ctrl={d.ctrl[i]}")
+            # for i in range(m.nu):
+            #     gear_val = m.actuator_gear[i][0]
+            #     print(f"actuator {i}: gear={gear_val}, ctrl={d.ctrl[i]}, actuator_force={d.actuator_force[i]}")
             counter += 1
             if counter % control_decimation == 0:
                 # Apply control signal here.
@@ -117,6 +126,7 @@ if __name__ == "__main__":
                 dqj = dqj * dof_vel_scale
                 gravity_orientation = get_gravity_orientation(quat)
                 omega = omega * ang_vel_scale
+                print("omega:", omega)
                 lin_vel = d.qvel[:3]  
                 lin_vel = lin_vel * lin_vel_scale  
                 period = 0.8
